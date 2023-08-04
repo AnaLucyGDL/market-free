@@ -3,7 +3,6 @@ import { UserService } from 'src/app/service/user.service';
 import { UsersModel } from 'src/app/models/users';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -22,7 +21,21 @@ export class LoginComponent implements OnInit {
       this.router.navigateByUrl('/home');
     }
   }
+  login() {
+    this.userService
+      .loginUser(this.user.email, this.user.password)
+      .then((user: any) => {
+        this.output.emit();
 
+        const userId = user.data._id;
+        localStorage.setItem('userId', userId);
+
+        this.router.navigateByUrl('/home');
+      })
+      .catch((err: any) => {
+        console.log(err.message, 'error');
+      });
+  }
   register(form: NgForm) {
     this.userService
       .registerUser(this.user)
